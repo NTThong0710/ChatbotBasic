@@ -1,0 +1,4 @@
+Tải Python 
+pip install flask
+pip install pandas
+app.py
