@@ -1,4 +1,4 @@
-/* Toàn bộ body */
+/* Tổng thể body */
 body {
     font-family: Arial, sans-serif;
     display: flex;
@@ -6,35 +6,89 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
-    background-color: #eef2f7;
+    background-image: url('background.jpg'); 
 }
+
+/* Sidebar hiển thị lịch sử cuộc trò chuyện */
+.sidebar {
+    width: 250px;
+    background-color: #424242;
+    padding: 15px;
+    box-shadow: 2px 0 12px rgba(0, 0, 0, 0.2);
+    overflow-y: auto;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    border-radius: 10px 0 0 10px;
+}
+
+.sidebar h2 {
+    font-size: 1.0rem;
+    margin-bottom: 15px;
+    color: #00796b;
+}
+
+/* Phong cách tin nhắn lịch sử trong sidebar */
+.history-user-message, .history-bot-message {
+    margin: 8px 0;
+    font-size: 0.9rem;
+    padding: 8px 10px;
+    border-radius: 10px;
+}
+
+.history-user-message {
+    background-color: #b2ebf2;
+    color: #00796b;
+    text-align: left;
+}
+
+.history-bot-message {
+    background-color: #e0e0e0;
+    color: #424242;
+    text-align: left;
+}
+
+/* Định dạng chính cho container để có không gian cho sidebar */
+.main-container {
+    margin-left: 270px;
+    width: calc(100% - 270px);
+}
+
 
 /* Container chính của chatbot */
 .chat-container {
     width: 100%;
-    max-width: 400px;
+    max-width: 900px; /* Chiều rộng tối đa của container */
     background-color: #ffffff;
     box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.15);
     border-radius: 10px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    margin: 0 auto; /* Căn giữa container trong bố cục */
 }
+
 
 /* Khung chat chính */
 #chatbox {
     padding: 15px;
-    height: 350px;
-    overflow-y: auto;
+    height: 350px; /* Chiều cao khung chat */
+    overflow-y: auto; /* Cuộn dọc khi nội dung quá nhiều */
     border-bottom: 1px solid #e0e0e0;
-    background-color: #f8f9fc;
+    background-color: #00796b;
     scroll-behavior: smooth;
+    margin-bottom: 10px; /* Khoảng cách giữa khung chat và phần nhập liệu */
+    border-radius: 10px; /* Bo tròn các góc */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Đổ bóng cho khung chat */
+    max-width: 100%; /* Đảm bảo khung chat không vượt quá chiều rộng */
 }
+
 
 /* Tin nhắn của người dùng */
 .user-message, .bot-message {
     padding: 10px 15px;
-    margin: 12px 0; /* Tăng khoảng cách giữa các tin nhắn */
+    margin: 10px 0;
     border-radius: 18px;
     max-width: 75%;
     line-height: 1.4;
@@ -44,49 +98,65 @@ body {
 /* Định dạng tin nhắn người dùng */
 .user-message {
     align-self: flex-end;
-    background-color: #007bff;
-    color: #ffffff;
-    box-shadow: 0px 4px 12px rgba(0, 123, 255, 0.3);
+    background-color: #b2ebf2;
+    color: #2e7d32;
+    box-shadow: 0px 4px 12px rgba(0, 121, 107, 0.3);
     text-align: right;
 }
 
 /* Định dạng tin nhắn của chatbot */
 .bot-message {
     align-self: flex-start;
-    background-color: #e2e3e5;
-    color: #333333;
+    background-color: whitesmoke;
+    color: #2e7d32;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.input-container {
+    display: flex;
+    flex-direction: column; /* Đặt chiều hướng thành cột */
+    align-items: center; /* Căn giữa nội dung */
+    padding: 20px;
+    background-image: url('background_input.jpg'); 
+    border-top: 1px solid #e0e0e0;
+    border-radius: 0 0 10px 10px;
 }
 
 /* Phong cách input cho tin nhắn */
 input[type="text"] {
-    padding: 15px;
-    border: none;
-    border-top: 1px solid #e0e0e0;
-    width: 100%;
+    padding: 10px;
+    border: 1px solid #e0e0e0;
+    width: 80%; /* Chiều rộng của ô nhập */
     box-sizing: border-box;
     font-size: 0.9rem;
     outline: none;
+    color: #424242;
+    background-color: #fafafa;
+    border-radius: 30px;
+    margin-bottom: 10px; /* Khoảng cách giữa ô nhập và nút gửi */
 }
 
 /* Phong cách của nút gửi */
 button {
     padding: 15px;
     border: none;
-    background-color: #007bff;
+    background-color: #00796b;
     color: white;
     cursor: pointer;
-    width: 100%;
+    width: 80%; /* Chiều rộng của nút gửi */
     font-size: 0.9rem;
     font-weight: bold;
     transition: background-color 0.2s;
+    border-radius: 20px;
+    margin-bottom: 10px;
 }
+
 
 button:hover {
-    background-color: #0056b3;
+    background-color: #004d40;
 }
 
-/* Thêm hiệu ứng cuộn mượt cho khung chat */
+/* Hiệu ứng cuộn mượt cho khung chat */
 #chatbox::-webkit-scrollbar {
     width: 8px;
 }
@@ -99,3 +169,63 @@ button:hover {
 #chatbox::-webkit-scrollbar-thumb:hover {
     background-color: #a0a0a0;
 }
+.sidebar {
+    width: 250px; /* Chiều rộng của sidebar */
+    background-color: #f8f9fc; /* Màu nền của sidebar */
+    background-image: url('background_sidebar.jpg'); 
+    padding: 10px; /* Padding bên trong */
+    border-right: 1px solid #ccc; /* Đường viền bên phải */
+}
+
+/* Định dạng cho nút xóa */
+#clear-history {
+    width: 80%; /* Nút chiếm toàn bộ chiều rộng */
+    margin-bottom: 10px; /* Khoảng cách dưới nút */
+    padding: 10px; /* Padding cho nút */
+    background-color: #00796b; /* Màu nền của nút */
+    color: white; /* Màu chữ của nút */
+    border: none; /* Không có viền */
+    border-radius: 5px; /* Bo góc cho nút */
+    cursor: pointer; /* Hiển thị con trỏ chuột khi hover */
+    font-size: 0.9rem; /* Kích thước chữ của nút */
+}
+
+/* Ẩn và hiển thị lịch sử trò chuyện */
+.chat-history-hidden {
+    height: 0; /* Ẩn nội dung */
+    overflow: hidden; /* Ẩn nội dung thừa */
+    transition: height 0.3s ease; /* Hiệu ứng chuyển tiếp */
+}
+
+.chat-history-visible {
+    height: auto; /* Hiển thị nội dung */
+    transition: height 0.3s ease; /* Hiệu ứng chuyển tiếp */
+}
+/* Phong cách của nút nói */
+.voice-button {
+    padding: 15px;
+    border: none;
+    background-color: #00796b; /* Màu nền của nút */
+    color: white; /* Màu chữ */
+    cursor: pointer; /* Hiển thị con trỏ khi hover */
+    width: 80%; /* Chiều rộng của nút */
+    font-size: 0.9rem; /* Kích thước chữ */
+    font-weight: bold; /* Đậm chữ */
+    transition: background-color 0.2s, transform 0.2s; /* Hiệu ứng chuyển tiếp */
+    border-radius: 20px; /* Bo góc cho nút */
+    display: flex; /* Căn giữa nội dung */
+    align-items: center; /* Căn giữa chiều dọc */
+    justify-content: center; /* Căn giữa chiều ngang */
+}
+
+.voice-button:hover {
+    background-color: #004d40; /* Màu nền khi hover */
+    transform: scale(1.05); /* Tăng kích thước nhẹ khi hover */
+}
+
+/* Biểu tượng micro trong nút */
+.voice-button i {
+    margin-right: 5px; /* Khoảng cách giữa biểu tượng và chữ */
+}
+
+

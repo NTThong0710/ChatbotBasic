@@ -5,22 +5,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chatbot</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
 
-    
-    <div class="chat-container">
-        <div id="chatbox">
-            <div class="bot-message">Xin chào! Tôi có thể giúp gì cho bạn?</div>
+    <!-- Sidebar hiển thị lịch sử cuộc trò chuyện -->
+    <div class="sidebar" id="chat-history-sidebar">
+        <h2>Lịch sử cuộc trò chuyện</h2>
+        <button id="clear-history" onclick="clearChatHistory()"><i class="fa fa-trash-o" aria-hidden="true"></i> Xóa lịch sử</button>
+        <div id="chat-history">
         </div>
     </div>
 
-    <div class="input-container">
-        <input type="text" id="userInput" placeholder="Nhập tin nhắn..." onkeypress="if(event.key === 'Enter') sendMessage()">
-        <button onclick="sendMessage()">Gửi</button>
+    <div class="main-container">
+        <div class="chat-container">
+            <div id="chatbox">
+                <div class="bot-message">Xin chào! Tôi có thể giúp gì cho bạn?</div>
+            </div>
+            <div class="input-container">
+                <input type="text" id="userInput" placeholder="Nhập câu hỏi trong này..." onkeypress="if(event.key === 'Enter') sendMessage()">
+                <button onclick="sendMessage()"><i class="fa fa-paper-plane" aria-hidden="true"></i> Gửi</button>
+                <button onclick="startDictation()"><i class="fa fa-microphone"></i> Nói</button> 
+            </div>
+        </div>
     </div>
 
     <script>
+        // Hàm tải lịch sử cuộc trò chuyện từ server và hiển thị ở sidebar
+        async function loadChatHistory() {
+            const response = await fetch("/chat_history.json");
+            if (!response.ok) return;
+            const chatHistory = await response.json();
+
+            const chatHistorySidebar = document.getElementById("chat-history");
+            chatHistorySidebar.innerHTML = "";  // Xóa nội dung cũ
+
+            chatHistory.forEach(message => {
+                const userMessage = document.createElement("div");
+                userMessage.classList.add("history-user-message");
+                userMessage.textContent = `Bạn: ${message.user}`;
+                chatHistorySidebar.appendChild(userMessage);
+
+                const botMessage = document.createElement("div");
+                botMessage.classList.add("history-bot-message");
+                botMessage.textContent = `Bot: ${message.bot}`;
+                chatHistorySidebar.appendChild(botMessage);
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", loadChatHistory);
+
         async function sendMessage() {
             const userInput = document.getElementById("userInput");
             const message = userInput.value;
@@ -47,7 +81,38 @@
             chatbox.appendChild(botMessage);
 
             chatbox.scrollTop = chatbox.scrollHeight;
+
+            loadChatHistory();  // Cập nhật lịch sử sau mỗi tin nhắn
+        }
+
+        // Hàm bắt đầu nhận diện giọng nói
+        function startDictation() {
+            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = 'vi-VN'; // Ngôn ngữ tiếng Việt
+            recognition.interimResults = false;
+
+            recognition.onresult = function(event) {
+                const userInput = document.getElementById("userInput");
+                userInput.value = event.results[0][0].transcript; // Gán giá trị từ nhận diện giọng nói
+                sendMessage(); // Gửi tin nhắn sau khi nhận diện
+            };
+
+            recognition.onerror = function(event) {
+                console.error("Error occurred in recognition: " + event.error);
+            };
+
+            recognition.start(); // Bắt đầu nhận diện
+        }
+        async function clearChatHistory() {
+            await fetch("/clear_history", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" }
+            });
+
+            const chatHistorySidebar = document.getElementById("chat-history");
+            chatHistorySidebar.innerHTML = "";  // Xóa nội dung trong sidebar
         }
     </script>
+
 </body>
 </html>
