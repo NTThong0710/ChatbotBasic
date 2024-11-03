@@ -94,6 +94,10 @@ def clear_chat_history():
     with open('chat_history.json', 'w', encoding="utf-8") as f:
         json.dump([], f)  # Lưu một danh sách rỗng để xóa tất cả
     return jsonify({})  # Không trả về thông báo gì
+@app.route("/faq_questions")
+def faq_questions():
+    faq_list = list(responses.keys())  # Lấy các câu hỏi từ từ điển
+    return jsonify(faq_list)
 
 if __name__ == "__main__":
     app.run(debug=True)

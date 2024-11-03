@@ -11,9 +11,18 @@
 
     <!-- Sidebar hiển thị lịch sử cuộc trò chuyện -->
     <div class="sidebar" id="chat-history-sidebar">
-        <h2>Lịch sử cuộc trò chuyện</h2>
-        <button id="clear-history" onclick="clearChatHistory()"><i class="fa fa-trash-o" aria-hidden="true"></i> Xóa lịch sử</button>
-        <div id="chat-history">
+        <div class="toggle-buttons">
+            <button onclick="showChatHistory()"><i class="fa fa-history" aria-hidden="true"></i> Lịch sử </button>
+            <button onclick="showFAQ()"><i class="fa fa-question-circle-o" aria-hidden="true"></i> Câu hỏi thường gặp</button>
+        </div>
+        <div id="chat-history-section">
+            <h2>Lịch sử cuộc trò chuyện</h2>
+            <button id="clear-history" onclick="clearChatHistory()"><i class="fa fa-trash-o" aria-hidden="true"></i> Xóa lịch sử</button>
+            <div id="chat-history"></div>
+        </div>
+        <div id="faq-section" style="display: none;">
+            <h2>Câu Hỏi Thường Gặp</h2>
+            <div id="faq-questions"></div>
         </div>
     </div>
 
@@ -112,6 +121,40 @@
             const chatHistorySidebar = document.getElementById("chat-history");
             chatHistorySidebar.innerHTML = "";  // Xóa nội dung trong sidebar
         }
+
+        document.addEventListener("DOMContentLoaded", function () {
+        loadChatHistory();
+        loadFAQ();  // Gọi hàm loadFAQ khi trang được tải
+        });
+
+    async function loadFAQ() {
+        const response = await fetch("/faq_questions");
+        if (!response.ok) return;
+        const faqQuestions = await response.json();
+
+        const faqContainer = document.getElementById("faq-questions");
+        faqContainer.innerHTML = "";  // Xóa nội dung cũ (nếu có)
+
+        faqQuestions.forEach(question => {
+            const questionElement = document.createElement("div");
+            questionElement.classList.add("faq-question");
+            questionElement.textContent = question;
+            questionElement.onclick = () => {
+                document.getElementById("userInput").value = question;
+                sendMessage();  // Tự động gửi câu hỏi khi người dùng nhấp vào
+            };
+            faqContainer.appendChild(questionElement);
+        });
+    }
+    function showChatHistory() {
+        document.getElementById("chat-history-section").style.display = "block";
+        document.getElementById("faq-section").style.display = "none";
+    }
+
+    function showFAQ() {
+        document.getElementById("chat-history-section").style.display = "none";
+        document.getElementById("faq-section").style.display = "block";
+    }
     </script>
 
 </body>
